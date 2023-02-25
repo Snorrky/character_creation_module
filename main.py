@@ -1,5 +1,8 @@
 from random import randint
 
+
+from graphic_arts.start_game_banner import run_screensaver
+
 DEFAULT_ATTACK = 5
 DEFAULT_DEFENCE = 10
 DEFAULT_STAMINA = 80
@@ -57,27 +60,6 @@ class Healer(Character):
     SPECIAL_BUFF = DEFAULT_DEFENCE + 30
     SPECIAL_SKILL = 'Защита' 
 
-def choice_char_class(char_name) -> Character:
-    """Выбор класса."""
-    game_classes = {
-        'warrior': Warrior,
-        'mage': Mage,
-        'healer': Healer,
-    }
-    approve_choice: str = None
-    char_class: str = ''
-    while approve_choice != 'y':
-        selected_class = input('Введи название персонажа, '
-                               'за которого хочешь играть:'
-                               ' Воитель — warrior, '
-                               'Маг — mage, Лекарь — healer: ')
-        char_class: Character = game_classes[selected_class](char_name)
-        print(char_class)
-
-        approve_choice = input('Нажми (Y), чтобы подтвердить выбор, '
-                               'или любую другую кнопку, '
-                               'чтобы выбрать другого персонажа ').lower()
-    return char_class
 
 def start_training(character) -> str:
     '''Тренировка.'''
@@ -93,9 +75,47 @@ def start_training(character) -> str:
           'defence — чтобы блокировать атаку противника или '
           'special — чтобы использовать свою суперсилу.')
     print('Если не хочешь тренироваться, введи команду skip.')
-    cmd = None
+    cmd: str = None
     while cmd != 'skip':
         cmd = input('Введи команду: ')
         if cmd in commands:
             print(commands[cmd]())
     return 'Тренировка окончена.'
+
+def choice_char_class(char_name) -> Character:
+    """Выбор класса."""
+    game_classes = {
+        'warrior': Warrior,
+        'mage': Mage,
+        'healer': Healer,
+    }
+    approve_choice: str = None
+    char_class: Character = None
+    while approve_choice != 'y':
+        selected_class = input('Введи название персонажа, '
+                               'за которого хочешь играть:'
+                               ' Воитель — warrior, '
+                               'Маг — mage, Лекарь — healer: ')
+        char_class: Character = game_classes[selected_class](char_name)
+
+        approve_choice = input('Нажми (Y), чтобы подтвердить выбор, '
+                               'или любую другую кнопку, '
+                               'чтобы выбрать другого персонажа ').lower()
+    return char_class
+
+def main() -> None:
+    """Приветствие."""
+    if __name__ == "__main__":
+        run_screensaver()
+        print('Приветствую тебя, искатель приключений!')
+        print('Прежде чем начать игру...')
+        char_name: str = input('...назови себя: ')
+        print(f'Здравствуй, {char_name}! '
+            'Сейчас твоя выносливость — 80, атака — 5 и защита — 10.')
+        print('Ты можешь выбрать один из трёх путей силы:')
+        print('Воитель, Маг, Лекарь')
+        char_class: Character = choice_char_class(char_name)
+        print(start_training(char_class))
+
+
+main()
